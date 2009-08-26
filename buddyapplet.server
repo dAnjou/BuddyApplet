@@ -1,0 +1,25 @@
+<oaf_info>
+<oaf_server iid="OAFIID:BuddyApplet_Factory" type="exe"
+            location="/usr/lib/gnome-applets/buddyapplet">
+
+        <oaf_attribute name="repo_ids" type="stringv">
+                <item value="IDL:Bonobo/GenericFactory:1.0"/>
+                <item value="IDL:Bonobo/Unknown:1.0"/>
+        </oaf_attribute>
+        <oaf_attribute name="name" type="string" value="BuddyApplet Factory"/>
+        <oaf_attribute name="description" type="string" value="Displays a Pidgin buddy list with some functionality"/>
+</oaf_server>
+
+<oaf_server iid="OAFIID:BuddyApplet" type="factory"
+            location="OAFIID:BuddyApplet_Factory">
+
+        <oaf_attribute name="repo_ids" type="stringv">
+                <item value="IDL:GNOME/Vertigo/PanelAppletShell:1.0"/>
+                <item value="IDL:Bonobo/Control:1.0"/>
+                <item value="IDL:Bonobo/Unknown:1.0"/>
+        </oaf_attribute>
+        <oaf_attribute name="name" type="string" value="BuddyApplet"/>
+        <oaf_attribute name="description" type="string" value="Displays a Pidgin buddy list with some functionality"/>
+        <oaf_attribute name="panel:icon" type="string" value="buddyapplet-icon.png"/>
+</oaf_server>
+</oaf_info>

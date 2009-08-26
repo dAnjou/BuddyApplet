@@ -1,0 +1,13 @@
+AT YOUR OWN RISK :P
+
+Installation (install.sh works for Ubuntu 9.04):
+
+  * change to the directory, where you unpacked the downloaded archive
+  * run 'install.sh' as root
+
+Now there should be a new entry in the "Add to Panel" dialog.
+
+
+
+---
+Icon/Logo by Mauricio Duque - http://www.snap2objects.com/
