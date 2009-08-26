@@ -10,8 +10,6 @@ class DbusPidgin:
             self.obj = self.bus.get_object("im.pidgin.purple.PurpleService",
                                  "/im/pidgin/purple/PurpleObject")
             self.purple = dbus.Interface(self.obj, "im.pidgin.purple.PurpleInterface")
-            for i in range(8):
-                print self.purple.PurplePrimitiveGetIdFromType(i+1)
             return True
         except:
             print "dbus error - maybe pidgin is not running"

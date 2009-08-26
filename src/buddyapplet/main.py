@@ -2,9 +2,11 @@
 
 import sys
 import gtk
-import applet
+import app
+import gnomeapplet
 
-def factory(applet, iid):
+
+def factory(app, iid):
     return True
 
 for arg in sys.argv:
@@ -12,7 +14,7 @@ for arg in sys.argv:
         mainWindow = gtk.Window(gtk.WINDOW_TOPLEVEL)
         mainWindow.set_title("BuddyApplet")
         mainWindow.connect("destroy", gtk.main_quit)
-        applet = applet.Applet()
+        applet = app.Applet()
         factory(applet, None)
         applet.reparent(mainWindow)
         mainWindow.show_all()
@@ -20,5 +22,4 @@ for arg in sys.argv:
         sys.exit()
 
 if __name__ == '__main__':
-    print "Starting factory"
-    gnomeapplet.bonobo_factory("OAFIID:BuddyApplet_Factory", buddyapplet.Applet.__gtype__, "Applet, that displays a Pidgin buddy list", "0.2", factory)
+    gnomeapplet.bonobo_factory("OAFIID:BuddyApplet_Factory", app.Applet.__gtype__, "Applet, that displays a Pidgin buddy list", "0.2", factory)

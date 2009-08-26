@@ -1,6 +1,6 @@
 <oaf_info>
 <oaf_server iid="OAFIID:BuddyApplet_Factory" type="exe"
-            location="/usr/lib/gnome-applets/buddyapplet">
+            location="/usr/lib/gnome-applets/buddyapplet/main">
 
         <oaf_attribute name="repo_ids" type="stringv">
                 <item value="IDL:Bonobo/GenericFactory:1.0"/>
