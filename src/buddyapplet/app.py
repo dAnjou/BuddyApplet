@@ -6,23 +6,29 @@ import dbuspidgin
 import gobject
 
 class Applet(gnomeapplet.Applet):
-    def __init__(self):
-        gnomeapplet.Applet.__init__(self)
+    def __init__(self, applet, iid):
+        #gnomeapplet.Applet.__init__(self)
         self.__gobject_init__()
         self.dbus = dbuspidgin.DbusPidgin()
         self.dbus.connect()
 
         # applet icon (what you will see in the panel)
-        eventbox = gtk.EventBox()
-        eventbox.connect("button-press-event", self.__on_applet_clicked)
-        eventbox.show()
-        image = gtk.Image()
-        image.set_from_file("/usr/share/pixmaps/buddyapplet-icon.png")
-        eventbox.add(image)
-        image.show()
+        self.eventbox = gtk.EventBox()
+        self.eventbox.connect("button-press-event", self.__on_applet_clicked)
+        self.eventbox.show_all()
+
+        self.label = gtk.Label("text")
+
+        self.image = gtk.Image()
+        self.image.set_from_file("/usr/share/pixmaps/buddyapplet-icon.png")
+        self.eventbox.add(self.image)
+        self.image.show_all()
+
+        self.label.show_all()
 
         # adding "applet icon" to the applet
-        self.add(eventbox)
+        self.applet = applet
+        self.applet.add(self.eventbox)
 
         # adding "About" entry to the right click menu
         propxml = """
@@ -30,9 +36,9 @@ class Applet(gnomeapplet.Applet):
                 <menuitem name="Item 3" verb="About" label="_About" pixtype="stock" pixname="gtk-about"/>
                 </popup>"""
         verbs = [("About", self.__on_about_clicked)]
-        self.setup_menu(propxml, verbs, None)
+        self.applet.setup_menu(propxml, verbs, None)
 
-        self.show_all()
+        self.applet.show_all()
 
     def __on_applet_clicked(self, eventbox, event):
         if event.button == 1:
