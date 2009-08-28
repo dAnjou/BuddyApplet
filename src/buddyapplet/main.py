@@ -5,7 +5,6 @@ import gtk
 import app
 import gnomeapplet
 
-
 def factory(applet, iid):
     app.Applet(applet, iid)
     return True

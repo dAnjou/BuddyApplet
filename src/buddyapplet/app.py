@@ -7,10 +7,9 @@ import gobject
 
 class Applet(gnomeapplet.Applet):
     def __init__(self, applet, iid):
-        #gnomeapplet.Applet.__init__(self)
         self.__gobject_init__()
+
         self.dbus = dbuspidgin.DbusPidgin()
-        self.dbus.connect()
 
         # applet icon (what you will see in the panel)
         self.eventbox = gtk.EventBox()
@@ -42,16 +41,31 @@ class Applet(gnomeapplet.Applet):
 
     def __on_applet_clicked(self, eventbox, event):
         if event.button == 1:
-            menu = gtk.Menu()
-            offmenu = gtk.Menu()
-            offitem = gtk.ImageMenuItem("Offline")
-            offitem.set_submenu(offmenu)
-            offitem.show()
-            self.__fill_list(menu, self.dbus.get_buddies_by_status(["available", "away", "dnd", "extended_away", "occupied"]))
-            self.__fill_list(offmenu, self.dbus.get_buddies_by_status(["offline"]))
-            menu.append(offitem)
-            menu.attach_to_widget(eventbox, None)
-            menu.popup(None, None, self.__set_menu_position, event.button, event.time, eventbox)
+            if self.dbus.connect():
+                menu = gtk.Menu()
+                offmenu = gtk.Menu()
+                offitem = gtk.ImageMenuItem("Offline")
+                offitem.set_submenu(offmenu)
+                offitem.show()
+                self.__fill_list(menu, self.dbus.get_buddies_by_status(["available", "away", "dnd", "extended_away", "occupied"]))
+                self.__fill_list(offmenu, self.dbus.get_buddies_by_status(["offline"]))
+                menu.append(offitem)
+                menu.attach_to_widget(eventbox, None)
+                menu.popup(None, None, self.__set_menu_position, event.button, event.time, eventbox)
+            else:
+                startPidginWindow = gtk.MessageDialog(None,
+                                                      0,
+                                                      #gtk.MESSAGE_QUESTION,
+                                                      gtk.MESSAGE_ERROR,
+                                                      #gtk.BUTTONS_YES_NO,
+                                                      gtk.BUTTONS_CLOSE,
+                                                      "An error has occurred. Maybe Pidgin is not running.")
+                startPidginWindow.set_title("BuddyApplet - Where is Pidgin?")
+                #startPidginWindow.format_secondary_text("Do you want to start Pidgin now?")
+                response = startPidginWindow.run()
+                #if response == gtk.RESPONSE_YES:
+                #    print "Merkst'e selbst wa'?\n"
+                startPidginWindow.destroy()
             return True
         return False
 
