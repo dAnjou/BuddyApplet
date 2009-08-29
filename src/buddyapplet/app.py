@@ -4,6 +4,7 @@ import gnomeapplet
 import gtk
 import dbuspidgin
 import gobject
+import os
 
 class Applet(gnomeapplet.Applet):
     def __init__(self, applet, iid):
@@ -16,14 +17,10 @@ class Applet(gnomeapplet.Applet):
         self.eventbox.connect("button-press-event", self.__on_applet_clicked)
         self.eventbox.show_all()
 
-        self.label = gtk.Label("text")
-
         self.image = gtk.Image()
         self.image.set_from_file("/usr/share/pixmaps/buddyapplet-icon.png")
         self.eventbox.add(self.image)
         self.image.show_all()
-
-        self.label.show_all()
 
         # adding "applet icon" to the applet
         self.applet = applet
@@ -55,16 +52,16 @@ class Applet(gnomeapplet.Applet):
             else:
                 startPidginWindow = gtk.MessageDialog(None,
                                                       0,
-                                                      #gtk.MESSAGE_QUESTION,
-                                                      gtk.MESSAGE_ERROR,
-                                                      #gtk.BUTTONS_YES_NO,
-                                                      gtk.BUTTONS_CLOSE,
+                                                      gtk.MESSAGE_QUESTION,
+                                                      #gtk.MESSAGE_ERROR,
+                                                      gtk.BUTTONS_YES_NO,
+                                                      #gtk.BUTTONS_CLOSE,
                                                       "An error has occurred. Maybe Pidgin is not running.")
                 startPidginWindow.set_title("BuddyApplet - Where is Pidgin?")
-                #startPidginWindow.format_secondary_text("Do you want to start Pidgin now?")
+                startPidginWindow.format_secondary_text("Do you want to start Pidgin now?")
                 response = startPidginWindow.run()
-                #if response == gtk.RESPONSE_YES:
-                #    print "Merkst'e selbst wa'?\n"
+                if response == gtk.RESPONSE_YES:
+                    print os.spawnlp(os.P_NOWAIT, "pidgin")
                 startPidginWindow.destroy()
             return True
         return False
@@ -92,7 +89,9 @@ class Applet(gnomeapplet.Applet):
         img = gtk.Image()
         img.set_from_file(iconpath)
         item.set_image(img)
+        item.set_has_tooltip(True)
         item.connect("activate", self.__on_item_clicked, buddy)
+        item.connect("query-tooltip", self.__on_tooltip_show, buddy)
         item.show()
         return item
 
@@ -101,6 +100,12 @@ class Applet(gnomeapplet.Applet):
             item = self.__get_menu_entry(buddy, name, iconpath)
             item.show()
             menu.append(item)
+
+    def __on_tooltip_show(self, item, x, y, keyboard_mode, tooltip, buddy):
+        address, accountname, protocol = self.dbus.get_buddy_details(buddy)
+        text = "Username: %s\nAccount: %s\nProtocol: %s" % (address, accountname, protocol)
+        tooltip.set_text(text)
+        return True
 
     def __on_item_clicked(self, item, buddy):
         self.dbus.start_IM(buddy)

@@ -1,5 +1,4 @@
 import dbus
-from threading import Thread
 
 class DbusPidgin:
     def __init__(self):
@@ -58,6 +57,23 @@ class DbusPidgin:
             return buddyArray
         except:
             return buddyArray
+
+    def get_buddy_details(self, buddy):
+        try:
+            address = self.purple.PurpleBuddyGetName(buddy)
+            account = self.purple.PurpleBuddyGetAccount(buddy)
+            accountname = self.purple.PurpleAccountGetUsername(account)
+            protocol = self.purple.PurpleAccountGetProtocolName(account)
+            #pres = self.purple.PurpleBuddyGetPresence(buddy)
+            #statusid = self.purple.PurplePresenceGetActiveStatus(pres)
+            #type = self.purple.PurpleStatusGetType(statusid)
+            #for i in self.purple.PurpleStatusTypeGetAttrs(type):
+            #    bla = "%s" % i
+            #    print self.purple.PurpleStatusGetAttrInt(statusid, bla)
+            #    print self.purple.PurpleStatusGetAttrString(statusid, bla)
+            return (address, accountname, protocol)
+        except:
+            return ("", "", "")
 
     def start_IM(self, buddy):
         try:
