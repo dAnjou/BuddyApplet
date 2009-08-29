@@ -64,16 +64,17 @@ class DbusPidgin:
             account = self.purple.PurpleBuddyGetAccount(buddy)
             accountname = self.purple.PurpleAccountGetUsername(account)
             protocol = self.purple.PurpleAccountGetProtocolName(account)
-            #pres = self.purple.PurpleBuddyGetPresence(buddy)
-            #statusid = self.purple.PurplePresenceGetActiveStatus(pres)
-            #type = self.purple.PurpleStatusGetType(statusid)
-            #for i in self.purple.PurpleStatusTypeGetAttrs(type):
-            #    bla = "%s" % i
-            #    print self.purple.PurpleStatusGetAttrInt(statusid, bla)
-            #    print self.purple.PurpleStatusGetAttrString(statusid, bla)
-            return (address, accountname, protocol)
+            if not self.purple.PurpleBuddyGetIcon(buddy) == 0:
+                icon = self.purple.PurpleBuddyGetIcon(buddy)
+                iconpath = self.purple.PurpleBuddyIconGetFullPath(icon)
+            else:
+                iconpath = None
+            pres = self.purple.PurpleBuddyGetPresence(buddy)
+            statusid = self.purple.PurplePresenceGetActiveStatus(pres)
+            message = self.purple.PurpleStatusGetAttrString(statusid, "message")
+            return (address, accountname, protocol, message, iconpath)
         except:
-            return ("", "", "")
+            return ("", "", "", "", None)
 
     def start_IM(self, buddy):
         try:

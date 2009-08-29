@@ -102,9 +102,19 @@ class Applet(gnomeapplet.Applet):
             menu.append(item)
 
     def __on_tooltip_show(self, item, x, y, keyboard_mode, tooltip, buddy):
-        address, accountname, protocol = self.dbus.get_buddy_details(buddy)
-        text = "Username: %s\nAccount: %s\nProtocol: %s" % (address, accountname, protocol)
-        tooltip.set_text(text)
+        address, accountname, protocol, message, iconpath = self.dbus.get_buddy_details(buddy)
+        text = "\
+<markup>\
+<big><b>%s</b></big>\n\
+<b>Account:</b> %s\n\
+<b>Protocol:</b> %s\n\
+<b>Message:</b> %s\
+</markup>" % (address, accountname, protocol, message)
+        if not iconpath == None:
+            icon = gtk.Image()
+            icon.set_from_file(iconpath)
+            tooltip.set_icon(icon.get_pixbuf())
+        tooltip.set_markup(text)
         return True
 
     def __on_item_clicked(self, item, buddy):
